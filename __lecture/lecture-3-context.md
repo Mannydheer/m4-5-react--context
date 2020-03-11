@@ -22,30 +22,30 @@ const App = () => {
 
   return (
     <>
-      <Home />
+      <Home user={user} setUser={setUser}/>
       <Sidebar user={user} />
     </>
   );
 };
 
-const Home = () => {
+const Home = ({user,setUser}) => {
   return (
     <>
-      <Header />
-      <MainContent />
+      <Header user={user} setUser={setUser}/>
+      <MainContent/>
     </>
   );
 };
 
-const Header = () => {
+const Header = ({user, setUser}) => {
   return (
     <header>
-      <Navigation />
+      <Navigation user={user} setUser={setUser} />
     </header>
   );
 };
 
-const Navigation = () => {
+const Navigation = ({user, setUser}) => {
   return (
     <nav>
       <ul>
@@ -58,7 +58,7 @@ const Navigation = () => {
           </li>
         ) : (
           <li>
-            <LoginDialogTrigger />
+            <LoginDialogTrigger user={user} setUser={setUser} />
           </li>
         )}
       </ul>
@@ -66,7 +66,7 @@ const Navigation = () => {
   );
 };
 
-const LoginDialogTrigger = () => {
+const LoginDialogTrigger = ({user, setUser}) => {
   // Some stuff to show a button and handle showing
   // the dialog on click
 
@@ -108,7 +108,8 @@ Context is **global state** for your React tree.
 First, we create a Context, and make it available to the React tree with `<Context.Provider>`:
 
 ```js
-export const UserContext = React.createContext(null);
+export const UserContext = React.createContext(null); 
+//null is default state. 
 
 const App = () => {
   return (
@@ -117,7 +118,7 @@ const App = () => {
       <Main>
         <YourAppHere />
       </Main>
-    </UserContext.Provider>
+    </UserContext.Provider> //WRAPPEDx
   );
 };
 ```
@@ -149,30 +150,45 @@ Update the following components to use context
 ---
 
 ```jsx
+//first eport this...
+export const UserContext = React.createContext(null); 
+
 const App = () => {
   const [user, setUser] = React.useState({ username: 'Alfalfa' });
 
-  return <Home user={user} setUser={setUser} />;
+  return 
+    <UserContext.Provider value={{ user, setUser}}>
+        <Home />
+        <Header/>
+        <Navigation />
+    </UserContext.Provider> //WRAPPEDx
+  
+  
+  
+  // <Home user={user} setUser={setUser} />;
 };
 
-const Home = ({ user, setUser }) => {
+const Home = () => {
   return (
     <>
-      <Header user={user} setUser={setUser} />
+      <Header />
       <MainContent />
     </>
   );
 };
 
-const Header = ({ user, setUser }) => {
+const Header = () => {
   return (
     <header>
-      <Navigation user={user} setUser={setUser} />
+      <Navigation/>
     </header>
   );
 };
 
-const Navigation = ({ user, setUser }) => {
+const Navigation = () => {
+
+//destructuring... right away auto assigning key and valuye isnide. 
+  const {user, setUser} = useContext(userContext);
   return (
     <nav>
       <ul>
@@ -196,18 +212,21 @@ const Navigation = ({ user, setUser }) => {
 ---
 
 ```jsx
+
+export const DialogContext = createContext(null);
 const App = () => {
   const [dialog, setDialog] = React.useState(null);
 
   return (
-    <>
-      <MainContent dialog={dialog} setDialog={setDialog} />
-      <Dialog currentDialog={dialog} />
-    </>
+    <DialogContext.Provider value={{dialog, setDialog}}>
+      <MainContent/>
+      <Dialog/>
+    <DialogContext.Provider />
   );
 };
 
-const MainContent = ({ dialog, setDialog }) => {
+const MainContent = () => {
+  const { setDialog} useContext(DialogContext);
   return (
     <>
       <Sidebar>
@@ -221,6 +240,9 @@ const MainContent = ({ dialog, setDialog }) => {
 };
 
 const Dialog = ({ currentDialog }) => {
+  const currentDialog = useContext(DialogContext).dialog
+
+
   if (!currentDialog) {
     return null;
   }
