@@ -293,7 +293,7 @@ const Actions = ({ increment, decrement, name, setName }) => {
 // NO NEED TO TWEAK ANYTHING BELOW THIS POINT
 
 const Action = ({ onClick, children }) => {
-  return <button onClick={onClick}>{children}</button>;
+  return <button onClick={onClick}>{children}</button>; 
 };
 
 const TextInput = ({ label, value, setValue }) => {

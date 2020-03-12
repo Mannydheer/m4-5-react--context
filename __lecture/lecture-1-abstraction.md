@@ -37,7 +37,7 @@ Here are two different React components being used:
 
 ---
 
-- How generic are these components?
+- How generic are these components? 
 - How specific to _our_ application are they? Could I copy/paste this into another project?
 - How many instances of each component do I expect I'll need?
 - How much _state_ is involved with each component?
@@ -72,6 +72,7 @@ There is a _spectrum_ from "concrete" to "abstract":
 
 ## "Abstract" components are:
 
+//App for exampple cannot be moved around without too much refactoring. 
 - tied into our application
 - one-off
 - rigid
@@ -121,23 +122,15 @@ const Banner = ({ type, message, user }) => {
 ---
 
 ```js
-const ContactPage = () => {
-  const [message, setMessage] = React.useState('');
+const TextArea = () => {
+    const [message, setMessage] = React.useState('');
   const [messageError, setMessageError] = React.useState(false);
-
+ 
   return (
-    <div>
-      <Header />
-
-      <h1>Contact Us</h1>
-      <p>
-        We're looking forward to hearing from you. Please fill in this contact
-        form:
-      </p>
-
+    <>
       <label>
         Message:
-        <textarea
+        <textarea //If i want to reuse Text area, I would have to copy paste it every time too another compoennets. 
           value={message}
           onChange={ev => {
             setMessage(ev.target.value);
@@ -153,8 +146,43 @@ const ContactPage = () => {
       {messageError && (
         <p className="error">Please enter at least 100 characters.</p>
       )}
-    </div>
+    </>
   );
+}; 
+}
+
+const ContactPage = () => {
+  // const [message, setMessage] = React.useState('');
+  // const [messageError, setMessageError] = React.useState(false);
+
+  return (
+    <div>
+      <Header />
+
+      <h1>Contact Us</h1>
+      <p>
+        We're looking forward to hearing from you. Please fill in this contact
+        form:
+      </p>
+  <TextArea/>
+  //       <textarea //If i want to reuse Text area, I would have to copy paste it every time too another compoennets. 
+  //         value={message}
+  //         onChange={ev => {
+  //           setMessage(ev.target.value);
+
+  //           if (ev.target.value.length < 100) {
+  //             setMessageError(true);
+  //           } else {
+  //             setMessageError(false);
+  //           }
+  //         }}
+  //       />
+  //     </label>
+  //     {messageError && (
+  //       <p className="error">Please enter at least 100 characters.</p>
+  //     )}
+  //   </div>
+  // );
 };
 ```
 

@@ -3,73 +3,39 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import useInterval from '../hooks/use-interval.hook';
+import { GameProviderContext } from './GameProviderContext';
 
 import cookieSrc from '../cookie.svg';
 import Item from './Item';
+import items from './data';
+import useKeydown from '../hooks/use-keydown.hook';
+import useDocumentTitle from '../hooks/use-document-title.hook';
 
-const items = [
-  { id: 'cursor', name: 'Cursor', cost: 10, value: 1 },
-  { id: 'grandma', name: 'Grandma', cost: 100, value: 10 },
-  { id: 'farm', name: 'Farm', cost: 1000, value: 80 }
-];
-
-const calculateCookiesPerSecond = purchasedItems => {
-  return Object.keys(purchasedItems).reduce((acc, itemId) => {
-    const numOwned = purchasedItems[itemId];
-    const item = items.find(item => item.id === itemId);
-    const value = item.value;
-
-    return acc + value * numOwned;
-  }, 0);
-};
 
 const Game = () => {
-  const [numCookies, setNumCookies] = React.useState(1000);
+  
+  const {numCookies, setNumCookies, purchasedItems, setPurchasedItems, cookiesPerSecond} = React.useContext(GameProviderContext)
 
-  const [purchasedItems, setPurchasedItems] = React.useState({
-    cursor: 0,
-    grandma: 0,
-    farm: 0
+
+
+
+  useDocumentTitle({
+    title: `${numCookies} cookies - Cookie Clicker Workshop`,
+    fallbackTitle: 'Cookie Clicker Workshop'
   });
 
-  const incrementCookies = () => {
-    setNumCookies(c => c + 1);
-  };
 
-  useInterval(() => {
-    const numOfGeneratedCookies = calculateCookiesPerSecond(purchasedItems);
+  const incrementCookies = () => setNumCookies(cookies => cookies + 1);
 
-    setNumCookies(numCookies + numOfGeneratedCookies);
-  }, 1000);
+  useKeydown('Space', incrementCookies);
 
-  React.useEffect(() => {
-    document.title = `${numCookies} cookies - Cookie Clicker Workshop`;
-
-    return () => {
-      document.title = 'Cookie Clicker Workshop';
-    };
-  }, [numCookies]);
-
-  React.useEffect(() => {
-    const handleKeydown = ev => {
-      if (ev.code === 'Space') {
-        incrementCookies();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeydown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeydown);
-    };
-  });
 
   return (
     <Wrapper>
       <GameArea>
         <Indicator>
           <Total>{numCookies} cookies</Total>
-          <strong>{calculateCookiesPerSecond(purchasedItems)}</strong> cookies
+  <strong>{cookiesPerSecond}</strong> cookies
           per second
         </Indicator>
         <Button onClick={incrementCookies}>

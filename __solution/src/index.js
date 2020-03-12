@@ -8,7 +8,7 @@ const rootElement = document.getElementById('root');
 
 ReactDOM.render(
   <GameProvider>
-    <App />
+    <App  />
   </GameProvider>,
   rootElement
 );

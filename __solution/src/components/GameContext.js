@@ -7,6 +7,7 @@ import useInterval from '../hooks/use-interval.hook';
 export const GameContext = React.createContext(null);
 
 export const GameProvider = ({ children }) => {
+  console.log(children)
   const [numCookies, setNumCookies] = usePersistedState('numCookies', 1000);
 
   const [purchasedItems, setPurchasedItems] = usePersistedState(

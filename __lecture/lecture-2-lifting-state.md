@@ -20,16 +20,20 @@ Sometimes, you'll want to share data with a sibling component.
 
 ```js
 const App = () => {
+    const [searchTerm, setSearchTerm] = React.useState('');
+//now the parent has it and can pass it down to child. remember that simblings cannot communicate with each other. 
   return (
     <>
-      <Header />
-      <MainContent />
+  here we are passing down!!!!
+      <Header seartchTerm={seartchTerm} setSearchTerm={setSearchTerm}/>
+      <MainContent searchTerm={searchTerm}/>
     </>
   );
 };
 
-const Header = () => {
-  const [searchTerm, setSearchTerm] = React.useState('');
+const Header = ({searchTerm, setSearchTerm}) => {
+  // const [searchTerm, setSearchTerm] = React.useState('');
+  //need to lift it to APP and then pass props
 
   return (
     <header>
@@ -39,7 +43,7 @@ const Header = () => {
   );
 };
 
-const MainContent = () => {
+const MainContent = ({searchTerm}) => {
   return (
     <main>
       {/* how do I access `searchTerm`? */}
